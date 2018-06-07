@@ -105,7 +105,8 @@ set( XROOTD_PUBLIC_HEADERS
   XrdXrootd/XrdXrootdMonData.hh
   XrdXrootd/XrdXrootdBridge.hh
   XrdHttp/XrdHttpSecXtractor.hh
-)
+  XrdSecsss/XrdSecsssID.hh
+  )
 
 set( XROOTD_PRIVATE_HEADERS
   Xrd/XrdPoll.hh
