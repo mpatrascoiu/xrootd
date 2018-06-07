@@ -6,6 +6,7 @@ include( XRootDCommon )
 #-------------------------------------------------------------------------------
 set( LIB_XRD_BWM        XrdBwm-${PLUGIN_VERSION} )
 set( LIB_XRD_N2NO2P     XrdN2No2p-${PLUGIN_VERSION} )
+set( LIB_XRD_N2NEOS     XrdN2Neos-${PLUGIN_VERSION} )
 set( LIB_XRD_PSS        XrdPss-${PLUGIN_VERSION} )
 set( LIB_XRD_GPFS       XrdOssSIgpfsT-${PLUGIN_VERSION} )
 set( LIB_XRD_ZCRC32     XrdCksCalczcrc32-${PLUGIN_VERSION} )
@@ -84,6 +85,24 @@ set_target_properties(
   LINK_INTERFACE_LIBRARIES "" )
 
 #-------------------------------------------------------------------------------
+# N2Neos plugin library
+#-------------------------------------------------------------------------------
+add_library(
+  ${LIB_XRD_N2NEOS}
+  MODULE
+  XrdOuc/XrdOucN2Neos.cc )
+
+target_link_libraries(
+  ${LIB_XRD_N2NEOS}
+  XrdUtils )
+
+set_target_properties(
+  ${LIB_XRD_N2NEOS}
+  PROPERTIES
+  INTERFACE_LINK_LIBRARIES ""
+  LINK_INTERFACE_LIBRARIES "" )
+
+#-------------------------------------------------------------------------------
 # GPFS stat() plugin library
 #-------------------------------------------------------------------------------
 add_library(
@@ -150,5 +169,5 @@ set_target_properties(
 # Install
 #-------------------------------------------------------------------------------
 install(
-  TARGETS ${LIB_XRD_PSS} ${LIB_XRD_BWM} ${LIB_XRD_GPFS} ${LIB_XRD_ZCRC32} ${LIB_XRD_THROTTLE} ${LIB_XRD_N2NO2P}
+  TARGETS ${LIB_XRD_PSS} ${LIB_XRD_BWM} ${LIB_XRD_GPFS} ${LIB_XRD_ZCRC32} ${LIB_XRD_THROTTLE} ${LIB_XRD_N2NO2P} ${LIB_XRD_N2NEOS}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
