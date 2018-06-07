@@ -407,7 +407,7 @@ int XrdPssSys::Stat(const char *path, struct stat *buff, int Opts, XrdOucEnv *eP
 {
    int CgiLen = 0, retc;
    const char *Cgi = (eP ? eP->Env(CgiLen) : 0);
-   char *theID, idBuff[16], pbuff[PBsz], cbuff[CBsz];
+   char *theID, *tident, idBuff[16], pbuff[PBsz], cbuff[CBsz];
    XrdOucSid::theSid idVal;
 
 // Setup any required cgi information
@@ -424,9 +424,12 @@ int XrdPssSys::Stat(const char *path, struct stat *buff, int Opts, XrdOucEnv *eP
    if (sidP) theID = P2ID(&idVal, idBuff, sizeof(idBuff));
       else   theID = 0;
 
+   if (eP && eP->secEnv()) tident = (char *) eP->secEnv()->tident;
+      else                 tident = theID;
+
 // Convert path to URL
 //
-   if (!P2URL(retc,pbuff,PBsz,path,0,Cgi,CgiLen,theID,xLfn2Pfn)) return retc;
+   if (!P2URL(retc,pbuff,PBsz,path,0,Cgi,CgiLen,tident,xLfn2Pfn)) return retc;
 
 // Return proxied stat
 //
