@@ -183,11 +183,11 @@ int XrdSecgsiAuthzFun(XrdSecEntity &entity)
                  vtxt += 4;
 
                  // Copy the first CN name that is encountered
-                 while (*vtxt && *vtxt != '/' && idx < n) {
-                   vbuff[idx] = *vtxt++;
-                   if (vbuff[idx] == ' ') vbuff[idx] = '_';
-                   idx++;
-                 }
+                 while (*vtxt && *vtxt != '/' && idx < n)
+                    {vbuff[idx] = *vtxt++;
+                     if (vbuff[idx] == ' ') vbuff[idx] = '_';
+                     idx++;
+                    }
                  vbuff[idx] = 0;
 
                  if (*vbuff)
