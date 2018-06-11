@@ -609,7 +609,8 @@ BIO *XrdHttpProtocol::CreateBIO(XrdLink *lp)
 
 int XrdHttpProtocol::Process(XrdLink *lp) // We ignore the argument here
 {
-  int rc = 0;
+  int rc = 0, tidentLen;
+  char *tident;
 
   TRACEI(DEBUG, " Process. lp:" << lp << " reqstate: " << CurrentReq.reqstate);
 
@@ -689,6 +690,15 @@ int XrdHttpProtocol::Process(XrdLink *lp) // We ignore the argument here
           return -1;
       }
 
+      /* TODO: SecEntity.tident will be refactored into default Link->ID
+       *       and "http" value when the http.tident config option is present
+       */
+
+      // Add the link ID to the SecEntity
+      tidentLen = strlen(Link->ID) + strlen(SecEntity.tident) + 2;
+      tident = (char *) malloc(tidentLen);
+      snprintf(tident, tidentLen, "%s-%s", SecEntity.tident, Link->ID);
+      SecEntity.tident = tident;
 
       if (res != X509_V_OK) return -1;
       ssldone = true;
