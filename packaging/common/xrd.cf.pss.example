@@ -1,0 +1,88 @@
+all.manager xdc-test-proxy.cern.ch:1213
+
+########################################################
+# CMSD OPTIONS
+########################################################
+
+if exec cmsd
+
+all.role server
+all.export / stage r/w
+oss.localroot /cache
+
+else
+
+########################################################
+# SERVER OPTIONS
+########################################################
+
+all.role server
+
+########################################################
+# HTTP Protocol Options
+########################################################
+
+xrd.protocol http libXrdHttp.so
+
+http.cadir /etc/grid-security/certificates
+http.cert /etc/grid-security/hostcert.pem
+http.key /etc/grid-security/hostkey.pem
+
+http.cipherfilter ALL:HIGH:!EXP:!MD5:!MD2
+http.secxtractor /lib64/libXrdHttpVoms4Pss.so
+http.gridmap /etc/grid-security/grid-mapfile
+
+ofs.authlib /lib64/libAuthForwardClientCred.so
+ofs.authorize
+authfwdclientcred.authlib default
+
+########################################################
+# Proxy Mode Options
+########################################################
+ofs.osslib libXrdPss.so
+
+# DIRECT MODE proxy fronting the MGM xdc-test-mgm.cern.ch
+pss.origin xdc-test-mgm.cern.ch:1094
+all.export / r/w
+
+#pss.namelib -lfn2pfn libXrdN2Neos.so HelloWorld
+
+########################################################
+# Cache Options
+########################################################
+#pss.cachelib libXrdFileCache.so
+#pfc.ram 1g
+#oss.localroot /cache
+
+fi
+
+########################################################
+# COMMON PARAMATERS
+########################################################
+
+########################################################
+xrd.network keepalive
+xrd.allow host *
+
+#######################################################
+xrd.trace all
+xrdcl.trace all
+xrootd.trace all
+ofs.trace all
+oss.trace all
+http.trace all
+pss.trace all
+pfc.trace dump
+
+########################################################
+xrootd.seclib libXrdSec.so
+sec.level compatible
+
+sec.protocol sss -c /etc/eos.keytab -s /etc/eos.keytab -l 600
+sec.protocol gsi -crl:1 -cert:/etc/grid-security/hostcert.pem -key:/etc/grid-security/hostkey.pem -gridmap:/etc/grid-security/grid-mapfile -d:2 -gmapopt:10 -gmapto:0 -vomsat:2 -moninfo:1 -dlgpxy:1 -authzfun:libXrdSecgsiAUTHZVO-4.so -authzfunparms:valido=vo.indigo-datacloud.eu
+
+#sec.protocol unix
+
+#sec.protbind localhost.localdomain sss
+#sec.protbind localhost sss
+sec.protbind * only gsi
